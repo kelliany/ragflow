@@ -1,10 +1,3 @@
-!!! CRITICAL EXCEPTION RULE !!!
-Before applying the citation requirements below, you must first verify if the provided context contains the answer.
-1. If the context is IRRELEVANT or does not contain the answer: You MUST answer "知识库中未找到您要的答案！" and you must NOT generate any citations ([ID:x]).
-2. The citation requirements below ONLY apply when you have successfully found a valid answer in the context.
-!!! END EXCEPTION RULE !!!
-Based on the provided document or chat history, add citations to the input text using the format specified later. 
-
 # Citation Requirements:
 
 ## Technical Rules:
