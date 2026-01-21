@@ -97,6 +97,7 @@ export const EmptyDsl = {
   retrieval: [], // reference
   history: [],
   path: [],
+  variables: [],
   globals: {
     [AgentGlobals.SysQuery]: '',
     [AgentGlobals.SysUserId]: '',
@@ -622,10 +623,10 @@ export const useFetchExternalAgentInputs = () => {
     isFetching: loading,
     refetch,
   } = useQuery<IInputs>({
-    queryKey: [AgentApiAction.FetchExternalAgentInputs],
+    queryKey: [AgentApiAction.FetchExternalAgentInputs, sharedId],
     initialData: {} as IInputs,
     refetchOnReconnect: false,
-    refetchOnMount: false,
+    // refetchOnMount: false,
     refetchOnWindowFocus: false,
     gcTime: 0,
     enabled: !!sharedId,
