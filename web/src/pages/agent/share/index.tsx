@@ -28,6 +28,7 @@ const ChatContainer = () => {
     locale,
     theme,
     visibleAvatar,
+    hideBranding,
   } = useGetSharedChatSearchParams();
   useSyncThemeFromParams(theme);
   const { visible, hideModal, documentId, selectedChunk, clickDocumentButton } =
@@ -122,6 +123,7 @@ const ChatContainer = () => {
         title={inputsData.title}
         avatar={inputsData.avatar}
         handleReset={handleReset}
+        hideBranding={hideBranding}
       >
         <div className="flex flex-1 flex-col p-2.5  h-[90vh] m-3">
           <div

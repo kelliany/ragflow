@@ -38,6 +38,7 @@ export const useGetSharedChatSearchParams = () => {
     visibleAvatar: searchParams.get('visible_avatar')
       ? searchParams.get('visible_avatar') !== '1'
       : true,
+    hideBranding: searchParams.get('hide_branding') === '1',
   };
 };
 
