@@ -98,6 +98,8 @@ function AgentChatBox() {
                         ok={handleOk(message)}
                         isNext={false}
                         btnText={'Submit'}
+                        reference={findReferenceByMessageId(message.id)}
+                        clickDocumentButton={clickDocumentButton}
                       ></DebugContent>
                     )}
                   {message.role === MessageType.Assistant &&
@@ -106,6 +108,8 @@ function AgentChatBox() {
                         <MarkdownContent
                           content={message?.data?.tips}
                           loading={false}
+                          reference={findReferenceByMessageId(message.id)}
+                          clickDocumentButton={clickDocumentButton}
                         ></MarkdownContent>
                         <div>
                           {buildInputList(message)?.map((item) => item.value)}
