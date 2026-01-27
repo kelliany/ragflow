@@ -1,10 +1,12 @@
 import Image from '@/components/image';
 import SvgIcon from '@/components/svg-icon';
 import { IReferenceChunk, IReferenceObject } from '@/interfaces/database/chat';
+import { api_host } from '@/utils/api';
 import { getExtension } from '@/utils/document-util';
 import DOMPurify from 'dompurify';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import Markdown from 'react-markdown';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
@@ -24,7 +26,6 @@ import {
 } from '@/utils/chat';
 
 import { useFetchDocumentThumbnailsByIds } from '@/hooks/use-document-request';
-import { cn } from '@/lib/utils';
 import classNames from 'classnames';
 import { omit } from 'lodash';
 import { pipe } from 'lodash/fp';
@@ -55,7 +56,7 @@ function MarkdownContent({
   const contentWithCursor = useMemo(() => {
     let text = DOMPurify.sanitize(content, {
       ADD_TAGS: ['think', 'section'],
-      ADD_ATTR: ['class'],
+      ADD_ATTR: ['class', 'target'],
     });
     // let text = content;
     if (text === '') {
@@ -150,20 +151,13 @@ function MarkdownContent({
       return (
         <div key={chunkItem?.id} className="flex gap-2">
           {imageId && (
-            <HoverCard>
-              <HoverCardTrigger>
-                <Image
-                  id={imageId}
-                  className={styles.referenceChunkImage}
-                ></Image>
-              </HoverCardTrigger>
-              <HoverCardContent>
-                <Image
-                  id={imageId}
-                  className={cn(styles.referenceImagePreview)}
-                ></Image>
-              </HoverCardContent>
-            </HoverCard>
+            <PhotoView src={`${api_host}/document/image/${imageId}`}>
+              <Image
+                id={imageId}
+                className={styles.referenceChunkImage}
+                style={{ cursor: 'pointer' }}
+              ></Image>
+            </PhotoView>
           )}
           <div className={'space-y-2 max-w-[40vw] w-full'}>
             <div
@@ -211,7 +205,23 @@ function MarkdownContent({
     (text: string) => {
       let replacedText = reactStringReplace(text, currentReg, (match, i) => {
         const chunkIndex = getChunkIndex(match);
+        const referenceInfo = getReferenceInfo(chunkIndex);
+        const { imageId } = referenceInfo;
 
+        // 如果引用包含图片，直接显示图片
+        if (imageId) {
+          return (
+            <PhotoView key={i} src={`${api_host}/document/image/${imageId}`}>
+              <Image
+                id={imageId}
+                className={styles.referenceChunkImage}
+                style={{ cursor: 'pointer' }}
+              />
+            </PhotoView>
+          );
+        }
+
+        // 否则显示原有的Fig.标签
         return (
           <HoverCard key={i}>
             <HoverCardTrigger>
@@ -228,45 +238,47 @@ function MarkdownContent({
 
       return replacedText;
     },
-    [renderPopoverContent],
+    [renderPopoverContent, getReferenceInfo],
   );
 
   return (
-    <Markdown
-      rehypePlugins={[rehypeWrapReference, rehypeKatex, rehypeRaw]}
-      remarkPlugins={[remarkGfm, remarkMath]}
-      className={styles.markdownContentWrapper}
-      components={
-        {
-          'custom-typography': ({ children }: { children: string }) =>
-            renderReference(children),
-          code(props: any) {
-            const { children, className, ...rest } = props;
-            const restProps = omit(rest, 'node');
-            const match = /language-(\w+)/.exec(className || '');
-            return match ? (
-              <SyntaxHighlighter
-                {...restProps}
-                PreTag="div"
-                language={match[1]}
-                wrapLongLines
-              >
-                {String(children).replace(/\n$/, '')}
-              </SyntaxHighlighter>
-            ) : (
-              <code
-                {...restProps}
-                className={classNames(className, 'text-wrap')}
-              >
-                {children}
-              </code>
-            );
-          },
-        } as any
-      }
-    >
-      {contentWithCursor}
-    </Markdown>
+    <PhotoProvider>
+      <Markdown
+        rehypePlugins={[rehypeWrapReference, rehypeKatex, rehypeRaw]}
+        remarkPlugins={[remarkGfm, remarkMath]}
+        className={styles.markdownContentWrapper}
+        components={
+          {
+            'custom-typography': ({ children }: { children: string }) =>
+              renderReference(children),
+            code(props: any) {
+              const { children, className, ...rest } = props;
+              const restProps = omit(rest, 'node');
+              const match = /language-(\w+)/.exec(className || '');
+              return match ? (
+                <SyntaxHighlighter
+                  {...restProps}
+                  PreTag="div"
+                  language={match[1]}
+                  wrapLongLines
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              ) : (
+                <code
+                  {...restProps}
+                  className={classNames(className, 'text-wrap')}
+                >
+                  {children}
+                </code>
+              );
+            },
+          } as any
+        }
+      >
+        {contentWithCursor}
+      </Markdown>
+    </PhotoProvider>
   );
 }
 

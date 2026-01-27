@@ -12,7 +12,11 @@ import { Input } from '@/components/ui/input';
 import { RAGFlowSelect } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { IMessage } from '@/interfaces/database/chat';
+import {
+  IMessage,
+  IReferenceChunk,
+  IReferenceObject,
+} from '@/interfaces/database/chat';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { ReactNode, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -36,6 +40,8 @@ interface IProps {
   loading?: boolean;
   submitButtonDisabled?: boolean;
   btnText?: ReactNode;
+  reference?: IReferenceObject;
+  clickDocumentButton?: (documentId: string, chunk: IReferenceChunk) => void;
 }
 
 const DebugContent = ({
@@ -46,6 +52,8 @@ const DebugContent = ({
   loading = false,
   submitButtonDisabled = false,
   btnText,
+  reference,
+  clickDocumentButton,
 }: IProps) => {
   const { t } = useTranslation();
 
@@ -240,6 +248,8 @@ const DebugContent = ({
             <MarkdownContent
               content={message?.data?.tips}
               loading={false}
+              reference={reference}
+              clickDocumentButton={clickDocumentButton}
             ></MarkdownContent>
           </div>
         )}

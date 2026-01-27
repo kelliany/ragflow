@@ -54,7 +54,7 @@ const MarkdownContent = ({
   const contentWithCursor = useMemo(() => {
     let text = DOMPurify.sanitize(content, {
       ADD_TAGS: ['think', 'section'],
-      ADD_ATTR: ['class'],
+      ADD_ATTR: ['class', 'target'],
     });
 
     // let text = content;
@@ -209,7 +209,28 @@ const MarkdownContent = ({
     (text: string) => {
       let replacedText = reactStringReplace(text, currentReg, (match, i) => {
         const chunkIndex = getChunkIndex(match);
+        const referenceInfo = getReferenceInfo(chunkIndex);
+        const { imageId } = referenceInfo;
 
+        // 如果引用包含图片，直接显示图片
+        if (imageId) {
+          return (
+            <HoverCard key={i}>
+              <HoverCardTrigger>
+                <Image
+                  id={imageId}
+                  className={styles.referenceChunkImage}
+                  style={{ cursor: 'pointer' }}
+                />
+              </HoverCardTrigger>
+              <HoverCardContent className="max-w-3xl">
+                {getPopoverContent(chunkIndex)}
+              </HoverCardContent>
+            </HoverCard>
+          );
+        }
+
+        // 否则显示原有的Fig.标签
         return (
           <HoverCard key={i}>
             <HoverCardTrigger>
@@ -226,7 +247,7 @@ const MarkdownContent = ({
 
       return replacedText;
     },
-    [getPopoverContent],
+    [getPopoverContent, getReferenceInfo],
   );
 
   return (
