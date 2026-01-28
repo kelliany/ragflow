@@ -34,6 +34,21 @@ const FloatingChatWidget = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const mode = urlParams.get('mode') || 'full'; // 'button', 'window', or 'full'
   const enableStreaming = urlParams.get('streaming') === 'true'; // Only enable if explicitly set to true
+  const width = urlParams.get('width') || '380px'; // Default width
+  const height = urlParams.get('height') || '500px'; // Default height
+
+  // Calculate width with minimum width support
+  const calculateWidth = () => {
+    if (width.includes('%')) {
+      // If width is a percentage, use it directly
+      return width;
+    }
+    // Otherwise, use the specified width or default
+    return width;
+  };
+
+  // Calculate actual width with minimum width constraint
+  const actualWidth = calculateWidth();
 
   const {
     handlePressEnter,
@@ -376,7 +391,8 @@ const FloatingChatWidget = () => {
     return (
       <>
         <div
-          className={`fixed top-0 left-0 z-50 bg-blue-600 rounded-2xl transition-all duration-300 ease-out h-[500px] w-[380px] overflow-hidden ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`fixed top-0 left-0 z-50 bg-blue-600 rounded-2xl transition-all duration-300 ease-out overflow-hidden ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+          style={{ width: actualWidth, height, minWidth: '300px' }}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-2xl">
@@ -397,8 +413,11 @@ const FloatingChatWidget = () => {
 
           {/* Messages and Input */}
           <div
-            className="flex flex-col h-[436px] bg-white"
-            style={{ borderRadius: '0 0 16px 16px' }}
+            className="flex flex-col bg-white"
+            style={{
+              borderRadius: '0 0 16px 16px',
+              height: 'calc(100% - 64px)',
+            }}
           >
             <div
               className="flex-1 overflow-y-auto p-4 space-y-4"
@@ -429,7 +448,7 @@ const FloatingChatWidget = () => {
                   className={`flex ${message.role === MessageType.User ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[280px] px-4 py-2 rounded-2xl ${
+                    className={`max-w-full px-4 py-2 rounded-2xl ${
                       message.role === MessageType.User
                         ? 'bg-blue-600 text-white rounded-br-md'
                         : 'bg-gray-100 text-gray-800 rounded-bl-md'
@@ -528,9 +547,12 @@ const FloatingChatWidget = () => {
       {/* Chat Widget Container */}
       {isOpen && (
         <div
-          className={`fixed bottom-24 right-6 z-50 bg-blue-600 rounded-2xl transition-all duration-300 ease-out ${
-            isMinimized ? 'h-16' : 'h-[500px]'
-          } w-[380px] overflow-hidden`}
+          className={`fixed bottom-24 right-6 z-50 bg-blue-600 rounded-2xl transition-all duration-300 ease-out overflow-hidden`}
+          style={{
+            width: actualWidth,
+            height: isMinimized ? '64px' : height,
+            minWidth: '300px',
+          }}
         >
           {/* Header */}
           <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-2xl">
@@ -568,8 +590,11 @@ const FloatingChatWidget = () => {
           {/* Messages Container */}
           {!isMinimized && (
             <div
-              className="flex flex-col h-[436px] bg-white"
-              style={{ borderRadius: '0 0 16px 16px' }}
+              className="flex flex-col bg-white"
+              style={{
+                borderRadius: '0 0 16px 16px',
+                height: 'calc(100% - 64px)',
+              }}
             >
               <div
                 className="flex-1 overflow-y-auto p-4 space-y-4"
@@ -603,7 +628,7 @@ const FloatingChatWidget = () => {
                     className={`flex ${message.role === MessageType.User ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[280px] px-4 py-2 rounded-2xl ${
+                      className={`max-w-full px-4 py-2 rounded-2xl ${
                         message.role === MessageType.User
                           ? 'bg-blue-600 text-white rounded-br-md'
                           : 'bg-gray-100 text-gray-800 rounded-bl-md'
