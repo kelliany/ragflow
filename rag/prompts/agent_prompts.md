@@ -30,8 +30,8 @@ HTML
 模板：
 HTML
 <div style="margin: 8px 0 12px 0;">
-    <a href="[http://10.215.208.98/v1/document/image/](http://10.215.208.98/v1/document/image/){image_id}" target="_blank" style="cursor: zoom-in;">
-        <img src="[http://10.215.208.98/v1/document/image/](http://10.215.208.98/v1/document/image/){image_id}" 
+    <a href="[/v1/document/image/](/v1/document/image/){image_id}" target="_blank" style="cursor: zoom-in;">
+        <img src="[/v1/document/image/](/v1/document/image/){image_id}" 
              width="280px" 
              style="border-radius: 4px; border: 1px solid #eee; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
     </a>
@@ -42,7 +42,7 @@ HTML
 模板：
 HTML
 <div style="margin-top: 12px;">
-    <a href="[http://10.215.208.98/document/](http://10.215.208.98/document/){doc_id}?ext=pdf&prefix=document" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; background: #f9fafb; padding: 2px 8px; border-radius: 4px; border: 1px solid #eee;">
+    <a href="[/document/](/document/){doc_id}?ext=pdf&prefix=document" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; background: #f9fafb; padding: 2px 8px; border-radius: 4px; border: 1px solid #eee;">
         <span style="font-size: 10px; background: #9ca3af; color: #fff; padding: 1px 4px; border-radius: 2px; margin-right: 6px;">PDF</span>
         <span style="font-size: 12px; color: #666;">{docnm_kwd}</span>
     </a>
