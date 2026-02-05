@@ -9,6 +9,13 @@ services:
     profiles:
       - cpu
     image: ${RAGFLOW_IMAGE}
+    #image: infiniflow/ragflow:dev
+    #build:
+      #context: ../
+      #dockerfile: Dockerfile
+      #args:
+        #LIGHTEN: 1
+    container_name: ragflow
     # Example configuration to set up an MCP server:
     # command:
     #   - --enable-mcpserver
@@ -26,6 +33,15 @@ services:
     #   - --no-json-response # Disable JSON response mode in Streamable HTTP transport (instead of SSE over HTTP)
 
     # Example configuration to start Admin server:
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+    environment:
+      HF_ENDPOINT: "https://hf-mirror.com"
+      WORKER_NUM: "1"
+      PYWIKIBOT_NO_USER_CONFIG: "1"
+
     command:
       - --enable-adminserver
     ports:
@@ -35,12 +51,18 @@ services:
       - ${ADMIN_SVR_HTTP_PORT}:9381
       - ${SVR_MCP_PORT}:9382 # entry for MCP (host_port:docker_port). The docker_port must match the value you set for `mcp-port` above.
     volumes:
+      #- ../api:/ragflow/api
+      #- ../web/dist:/ragflow/web/dist
       - ./ragflow-logs:/ragflow/logs
       - ./nginx/ragflow.conf:/etc/nginx/conf.d/ragflow.conf
       - ./nginx/proxy.conf:/etc/nginx/proxy.conf
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./service_conf.yaml.template:/ragflow/conf/service_conf.yaml.template
       - ./entrypoint.sh:/ragflow/entrypoint.sh
+      - ./my_citation_prompt.md:/ragflow/rag/prompts/citation_prompt.md
+      - ../web/dist:/ragflow/web/dist
+      #- ../pyproject.toml:/ragflow/pyproject.toml
+      #- ../uv.lock:/ragflow/uv.lock
     env_file: .env
     networks:
       - ragflow
@@ -89,6 +111,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./service_conf.yaml.template:/ragflow/conf/service_conf.yaml.template
       - ./entrypoint.sh:/ragflow/entrypoint.sh
+      - ./my_citation_prompt.md:/ragflow/rag/prompts/citation_prompt.md
     env_file: .env
     networks:
       - ragflow
