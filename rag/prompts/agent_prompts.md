@@ -42,8 +42,10 @@ HTML
 模板：
 HTML
 <div style="margin-top: 12px;">
-    <a href="[/document/](/document/){doc_id}?ext=pdf&prefix=document" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; background: #f9fafb; padding: 2px 8px; border-radius: 4px; border: 1px solid #eee;">
-        <span style="font-size: 10px; background: #9ca3af; color: #fff; padding: 1px 4px; border-radius: 2px; margin-right: 6px;">PDF</span>
+    <a href="/document/{doc_id}?prefix=document" target="_blank" style="display: inline-flex; align-items: center; text-decoration: none; background: #f9fafb; padding: 2px 8px; border-radius: 4px; border: 1px solid #eee;">
+        <span style="font-size: 10px; background: #6b7280; color: #fff; padding: 1px 4px; border-radius: 2px; margin-right: 6px;">
+            FILE
+        </span>
         <span style="font-size: 12px; color: #666;">{docnm_kwd}</span>
     </a>
 </div>
