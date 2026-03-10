@@ -134,7 +134,8 @@ services:
     networks:
       - ragflow
     security_opt:
-      - no-new-privileges:true
+      # - no-new-privileges:true
+      - apparmor:unconfined
     environment:
       - SANDBOX_EXECUTOR_MANAGER_POOL_SIZE=${SANDBOX_EXECUTOR_MANAGER_POOL_SIZE:-3}
       - SANDBOX_BASE_PYTHON_IMAGE=${SANDBOX_BASE_PYTHON_IMAGE:-infiniflow/sandbox-base-python:latest}
